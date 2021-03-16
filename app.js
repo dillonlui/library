@@ -52,9 +52,9 @@ function clearGrid() {
 
 function finishedReading(value) {
     if (value == true) {
-        return 'Book completed.'
+        return 'checked'
     } else {
-        return 'Book incomplete.'
+        return ''
     }
 }
 
@@ -82,8 +82,24 @@ function createCard(libraryBook) {
     cardBody.appendChild(cardSubtitle);
     let cardText = document.createElement('p');
     cardText.className = 'card-text';
-    cardText.textContent = `${book.pages} pages. ${finishedReading(book.isRead)}`;
+    cardText.textContent = `${book.pages} pages.`;
     cardBody.appendChild(cardText);
+    let cardForm = document.createElement('form');
+    cardBody.appendChild(cardForm);
+    let cardFormDiv = document.createElement('div');
+    cardFormDiv.className = 'form-check form-switch'
+    cardForm.appendChild(cardFormDiv);
+    let cardFormSwitch = document.createElement('input')
+    cardFormSwitch.className = 'form-check-input'
+    cardFormSwitch.type = 'checkbox'
+    cardFormSwitch.id = `${book.title}`;
+    cardFormSwitch.checked = `${finishedReading(book.isRead)}`
+    cardFormDiv.appendChild(cardFormSwitch);
+    let cardFormLabel = document.createElement('label');
+    cardFormLabel.className = 'form-check-label';
+    cardFormLabel.htmlFor = `${book.title}`;
+    cardFormLabel.textContent = 'Finished?';
+    cardFormDiv.appendChild(cardFormLabel);
     card.appendChild(cardBody);
     library.appendChild(card);
 }
@@ -102,11 +118,19 @@ library.addEventListener('click', function (e) {
         e.target.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode);
     }
 })
+library.addEventListener('change', function (e) {
+    if (e.target.classList.contains('form-check-input')) {
+        let bookIndex = myLibrary.findIndex((book) => book.title == e.target.id)
+        myLibrary[bookIndex].isRead = e.target.checked
+        saveLocal();
+    }
+})
 // Modal Form
 
 let myModal = new bootstrap.Modal(document.getElementById('addBook'), {
     keyboard: false
 })
+let bookForm = document.querySelector('.newBookForm');
 const form = document.querySelector(".newBookForm");
 form.addEventListener("submit", addBook);
 
@@ -116,6 +140,7 @@ function addBook(e) {
     clearGrid();
     showLibrary();
     myModal.toggle();
+    bookForm.reset();
 }
 
 function getBookFromInput() {
@@ -134,7 +159,14 @@ function saveLocal() {
 
 function restoreLocal() {
     myLibrary = JSON.parse(localStorage.getItem("myLibrary"));
-    if (myLibrary === null) myLibrary = [];
+    if (myLibrary === null) myLibrary = [
+        {
+            title: 'Test',
+            author: 'Author',
+            pages: 1000,
+            isRead: true,
+        },
+    ];
     showLibrary();
 }
 
