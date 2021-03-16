@@ -6,15 +6,19 @@ body {
 .header {
 background-color: #8d6849;
 width: 100vw;
-color: seashell;
+color: snow;
 }
 
 .btn {
-    color: seashell;
+    color: snow;
     background-color: #041B15;
     border-color: black;
 }
 
 .btn:hover{
     background-color: #7A7265;
+}
+
+.card {
+    border-color: gray
 }
