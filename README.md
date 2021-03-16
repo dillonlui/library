@@ -1,2 +1,2 @@
 # library
-Practice with objects and constructors in JavaScript
+Practice with objects, constructors, and localStorage in JavaScript
